@@ -79,7 +79,7 @@ botoesCores.forEach((botao) => {
                 imagemMoto.src = "imagens/M15 Cinza.png";
                 imagemMoto.alt = "M15 Cinza";
             } else if (nomeModelo === "M16") {
-                imagemMoto.src = "imagens/m16.png";
+               imagemMoto.src = "imagens/M16.png";
                 imagemMoto.alt = "M16 Cinza";
             } else if (nomeModelo === "XM 2027") {
                 imagemMoto.src = "imagens/XM 2027 Cinza.png";
