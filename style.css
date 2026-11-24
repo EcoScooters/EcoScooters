@@ -1689,3 +1689,24 @@ button.cor-moto.preto-laranja {
         font-size: 12px;
     }
 }
+@media (max-width: 600px) {
+
+    .inicio {
+        background-size: auto 85%;
+        background-position: right bottom;
+        background-color: #172635;
+    }
+
+    .texto-inicio {
+        max-width: 48%;
+        gap: 14px;
+    }
+
+    .inicio h2 {
+        font-size: 28px;
+    }
+
+    .inicio p {
+        font-size: 13px;
+    }
+}
