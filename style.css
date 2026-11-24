@@ -1661,16 +1661,14 @@ button.cor-moto.preto-laranja {
 
     /* CAPA */
     .inicio {
-        min-height: 600px;
-        padding: 45px 6%;
-        display: flex;
-        align-items: center;
-        justify-content: flex-start;
-       background-size: cover;
-        background-position: right center;
-        background-repeat: no-repeat;
-        background-color: #172635;
-    }
+    min-height: 600px;
+    padding: 45px 6%;
+    background-image: url("imagens/Capa Celular.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-color: #172635;
+}
 
     .texto-inicio {
         max-width: 48%;
