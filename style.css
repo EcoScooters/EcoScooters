@@ -1625,3 +1625,67 @@ button.cor-moto.preto-laranja {
         right: 12px;
     }
 }
+/* =================================
+   CAPA E CABEÇALHO NO CELULAR
+   NOTEBOOK PERMANECE INALTERADO
+================================= */
+
+@media (max-width: 600px) {
+
+    header {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 4%;
+        gap: 8px;
+    }
+
+    .logo img {
+        width: 95px;
+    }
+
+    nav {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        gap: 8px 12px;
+    }
+
+    nav a {
+        font-size: 10px;
+        letter-spacing: 0;
+    }
+
+    .inicio {
+        min-height: 600px;
+        padding: 45px 6%;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        background-size: cover;
+        background-position: right center;
+        background-repeat: no-repeat;
+    }
+
+    .texto-inicio {
+        max-width: 55%;
+        gap: 18px;
+        transform: translate(0, -20px);
+    }
+
+    .inicio h2 {
+        font-size: clamp(25px, 7vw, 36px);
+        line-height: 1.1;
+    }
+
+    .inicio p {
+        font-size: 14px;
+        line-height: 1.5;
+    }
+
+    .inicio .botao {
+        padding: 12px 18px;
+        font-size: 12px;
+    }
+}
