@@ -1666,7 +1666,7 @@ button.cor-moto.preto-laranja {
         display: flex;
         align-items: center;
         justify-content: flex-start;
-        background-size: auto 75%;
+       background-size: cover;
         background-position: right center;
         background-repeat: no-repeat;
         background-color: #172635;
