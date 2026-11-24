@@ -79,7 +79,7 @@ botoesCores.forEach((botao) => {
                 imagemMoto.src = "imagens/M15 Cinza.png";
                 imagemMoto.alt = "M15 Cinza";
             } else if (nomeModelo === "M16") {
-               imagemMoto.src = "imagens/M16.png";
+                imagemMoto.src = "imagens/M16.png";
                 imagemMoto.alt = "M16 Cinza";
             } else if (nomeModelo === "XM 2027") {
                 imagemMoto.src = "imagens/XM 2027 Cinza.png";
@@ -169,3 +169,196 @@ window.addEventListener("pageshow", () => {
         }
     }
 });
+
+
+// ZOOM AUTOMÁTICO PARA TODAS AS PÁGINAS DE MODELOS
+const imagemPrincipal = document.querySelector(".foto-principal img");
+
+if (imagemPrincipal) {
+
+    // CRIA A JANELA DE ZOOM AUTOMATICAMENTE
+    const modalImagem = document.createElement("div");
+    modalImagem.className = "modal-imagem";
+    modalImagem.id = "modalImagem";
+
+    const botaoFechar = document.createElement("button");
+    botaoFechar.className = "fechar-modal";
+    botaoFechar.type = "button";
+    botaoFechar.innerHTML = "&times;";
+    botaoFechar.setAttribute("aria-label", "Fechar imagem ampliada");
+
+    const imagemAmpliada = document.createElement("img");
+    imagemAmpliada.id = "imagemAmpliada";
+    imagemAmpliada.alt = "Imagem ampliada da moto";
+
+    modalImagem.appendChild(botaoFechar);
+    modalImagem.appendChild(imagemAmpliada);
+    document.body.appendChild(modalImagem);
+
+    let escala = 1;
+    let deslocamentoX = 0;
+    let deslocamentoY = 0;
+    let ponteiros = new Map();
+    let distanciaInicial = 0;
+    let escalaInicial = 1;
+    let ultimoX = 0;
+    let ultimoY = 0;
+
+    function atualizarImagem() {
+        imagemAmpliada.style.transform =
+            `translate(${deslocamentoX}px, ${deslocamentoY}px) scale(${escala})`;
+
+        imagemAmpliada.style.cursor = escala > 1 ? "grab" : "zoom-in";
+    }
+
+    function limitarEscala(valor) {
+        return Math.min(4, Math.max(1, valor));
+    }
+
+    function resetarZoom() {
+        escala = 1;
+        deslocamentoX = 0;
+        deslocamentoY = 0;
+        ponteiros.clear();
+        atualizarImagem();
+    }
+
+    function abrirModal() {
+        imagemAmpliada.src = imagemPrincipal.src;
+        imagemAmpliada.alt = imagemPrincipal.alt;
+
+        modalImagem.classList.add("ativo");
+        resetarZoom();
+    }
+
+    function fecharModal() {
+        modalImagem.classList.remove("ativo");
+        resetarZoom();
+    }
+
+    imagemPrincipal.addEventListener("click", abrirModal);
+
+    // ZOOM COM A RODINHA DO MOUSE
+    modalImagem.addEventListener("wheel", (evento) => {
+        if (!modalImagem.classList.contains("ativo")) return;
+
+        evento.preventDefault();
+
+        escala = limitarEscala(
+            escala + (evento.deltaY < 0 ? 0.2 : -0.2)
+        );
+
+        if (escala === 1) {
+            deslocamentoX = 0;
+            deslocamentoY = 0;
+        }
+
+        atualizarImagem();
+    }, { passive: false });
+
+    // MOVIMENTO E ZOOM COM MOUSE OU TOQUE
+    imagemAmpliada.addEventListener("pointerdown", (evento) => {
+        evento.preventDefault();
+
+        imagemAmpliada.setPointerCapture(evento.pointerId);
+
+        ponteiros.set(evento.pointerId, {
+            x: evento.clientX,
+            y: evento.clientY
+        });
+
+        if (ponteiros.size === 1) {
+            ultimoX = evento.clientX;
+            ultimoY = evento.clientY;
+        }
+
+        if (ponteiros.size === 2) {
+            const pontos = Array.from(ponteiros.values());
+
+            distanciaInicial = Math.hypot(
+                pontos[0].x - pontos[1].x,
+                pontos[0].y - pontos[1].y
+            );
+
+            escalaInicial = escala;
+        }
+    });
+
+    imagemAmpliada.addEventListener("pointermove", (evento) => {
+        if (!ponteiros.has(evento.pointerId)) return;
+
+        ponteiros.set(evento.pointerId, {
+            x: evento.clientX,
+            y: evento.clientY
+        });
+
+        // MOVIMENTO COM UM DEDO OU MOUSE
+        if (ponteiros.size === 1 && escala > 1) {
+            deslocamentoX += evento.clientX - ultimoX;
+            deslocamentoY += evento.clientY - ultimoY;
+
+            ultimoX = evento.clientX;
+            ultimoY = evento.clientY;
+
+            atualizarImagem();
+        }
+
+        // ZOOM COM DOIS DEDOS
+        if (ponteiros.size === 2) {
+            const pontos = Array.from(ponteiros.values());
+
+            const distanciaAtual = Math.hypot(
+                pontos[0].x - pontos[1].x,
+                pontos[0].y - pontos[1].y
+            );
+
+            if (distanciaInicial > 0) {
+                escala = limitarEscala(
+                    escalaInicial * (distanciaAtual / distanciaInicial)
+                );
+
+                if (escala === 1) {
+                    deslocamentoX = 0;
+                    deslocamentoY = 0;
+                }
+
+                atualizarImagem();
+            }
+        }
+    });
+
+    function soltarPonteiro(evento) {
+        ponteiros.delete(evento.pointerId);
+
+        if (ponteiros.size === 1) {
+            const ponto = Array.from(ponteiros.values())[0];
+            ultimoX = ponto.x;
+            ultimoY = ponto.y;
+        }
+
+        if (ponteiros.size === 0) {
+            distanciaInicial = 0;
+        }
+    }
+
+    imagemAmpliada.addEventListener("pointerup", soltarPonteiro);
+    imagemAmpliada.addEventListener("pointercancel", soltarPonteiro);
+    imagemAmpliada.addEventListener("lostpointercapture", soltarPonteiro);
+
+    // FECHAR PELO BOTÃO
+    botaoFechar.addEventListener("click", fecharModal);
+
+    // FECHAR CLICANDO FORA DA IMAGEM
+    modalImagem.addEventListener("click", (evento) => {
+        if (evento.target === modalImagem) {
+            fecharModal();
+        }
+    });
+
+    // FECHAR COM ESC
+    document.addEventListener("keydown", (evento) => {
+        if (evento.key === "Escape") {
+            fecharModal();
+        }
+    });
+}
