@@ -113,16 +113,16 @@ botoesCores.forEach((botao) => {
             } else if (nomeModelo === "V70") {
                 imagemMoto.src = "imagens/V70 Branca.png";
                 imagemMoto.alt = "V70 Branca";
-            } else if (nomeModelo === "T3 V7") {
+            } else if (nomeModelo === "T3 V") {
                 imagemMoto.src = "imagens/T3 V Branca.png";
-                imagemMoto.alt = "T3 V7 Branca";
+                imagemMoto.alt = "T3 V Branca";
             }
         }
 
-        // COR ROSA DA T3 V7
-        if (nomeModelo === "T3 V7" && botao.classList.contains("rosa")) {
+        // COR ROSA DA T3 V
+        if (nomeModelo === "T3 V" && botao.classList.contains("rosa")) {
             imagemMoto.src = "imagens/T3 V Rosa.png";
-            imagemMoto.alt = "T3 V7 Rosa";
+            imagemMoto.alt = "T3 V Rosa";
         }
 
         // COR PRATA DA A4
